@@ -1,16 +1,25 @@
 package net.cheney.calendar.router.prefix;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import com.google.common.base.Predicate;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 import net.cheney.motown.uri.Path;
 
 public class PrefixRouter<V> {
 	
+	private final List<PrefixRoutable<V>> routables;
+
+	public PrefixRouter(List<PrefixRoutable<V>> routables) {
+		this.routables = routables;
+	}
+	
+	public List<PrefixRoutable<V>> bestMatchForPrefix(Path path) {
+		return bestMatchForPrefix(path, 1, routables);
+	}
 	
 	/**
 	 * Return a {@link List} of possible candidates that startWith the supplied {@link Path}
@@ -18,19 +27,24 @@ public class PrefixRouter<V> {
 	 * @param list
 	 * @return
 	 */
-	protected List<PrefixRoutable> bestMatchForPrefix(final Path prefix, List<PrefixRoutable> list) {
-		return newArrayList(filter(list, new Predicate<PrefixRoutable>() {
-
-			@Override
-			public boolean apply(PrefixRoutable input) {
-				return input.prefix().first(prefix.size()).equals(prefix);
+	private List<PrefixRoutable<V>> bestMatchForPrefix(final Path path, int prefixCount, Iterable<PrefixRoutable<V>> list) {
+		Path prefix = path.first(prefixCount);
+		List<PrefixRoutable<V>> l = new ArrayList<PrefixRoutable<V>>();
+		for(PrefixRoutable<V> r : list) {
+			if(r.prefix().first(prefix.size()).equals(prefix)) {
+				l.add(r);
 			}
+		}
+		switch(l.size()) {
+		case 0:
+			return Collections.emptyList();
 			
-		}));
+		case 1:
+			return l;
+			
+		default:
+			return bestMatchForPrefix(path, ++prefixCount, l);
+		}
 	}
-	
-	public class Worker {
-		
-		
-	}
+
 }
