@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.List;
 
+import net.cheney.calendar.router.prefix.PrefixRoutable;
 import net.cheney.motown.dispatcher.Dispatcher;
 import net.cheney.motown.dispatcher.ResourceFactory;
 import net.cheney.motown.dispatcher.ResourceHandler;
-import net.cheney.motown.dispatcher.SingletonResourceFactory;
 import net.cheney.motown.dispatcher.dynamic.DynamicResourceHandler;
 import net.cheney.motown.protocol.http.async.HttpServerProtocolFactory;
 import net.cheney.motown.resource.api.ResourceProvidor;
@@ -39,10 +40,8 @@ public class Startup {
 
 			ResourceController controller = new ResourceController(providor);
 
-			ResourceFactory resourceFactory = new SingletonResourceFactory(
-					controller);
-			ResourceHandler resourceHandler = new DynamicResourceHandler(
-					resourceFactory);
+			ResourceFactory resourceFactory = ResourceFactory.factoryForResource(controller);
+			ResourceHandler resourceHandler = new DynamicResourceHandler(resourceFactory);
 
 			Dispatcher dispatcher = new Dispatcher(resourceHandler);
 

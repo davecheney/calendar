@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
 import net.cheney.motown.uri.Path;
 
 public class PrefixRouter<V> {
@@ -17,8 +14,8 @@ public class PrefixRouter<V> {
 		this.routables = routables;
 	}
 	
-	public List<PrefixRoutable<V>> bestMatchForPrefix(Path path) {
-		return bestMatchForPrefix(path, 1, routables);
+	public PrefixRoutable<V> bestMatchForPrefix(Path path) {
+		return bestMatchForPrefix(path, 1, routables).get(0);
 	}
 	
 	/**
