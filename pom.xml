@@ -27,7 +27,7 @@
 
 	<ciManagement>
 		<system>hudson</system>
-		<url>http://hudson.cheney.net/job/calendar-TRUNK/</url>
+		<url>http://hudson.cheney.net/job/calendar/</url>
 		<notifiers>
 			<notifier>
 				<type>mail</type>
